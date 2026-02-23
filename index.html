@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iField · Architecture & Consciousness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04070f;
+    --bg2: #080d1a;
+    --cyan: #00c8f8;
+    --orange: #ff7340;
+    --text: #e8eeff;
+    --muted: #6b7fa3;
+    --glass: rgba(255,255,255,0.04);
+    --border: rgba(0,200,248,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw;
+    height: 64px;
+    background: rgba(4,7,15,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem; font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); font-size: 0.88rem;
+    text-decoration: none; letter-spacing: 0.05em;
+    text-transform: uppercase; font-family: 'Space Mono', monospace;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 0.45rem 1.2rem;
+    border-radius: 2rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .nav-cta:hover { background: var(--cyan); color: var(--bg); }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative; height: 100vh; min-height: 700px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('IMG_3987.jpeg');
+    background-size: cover; background-position: center 30%;
+    transform: scale(1.08);
+    transition: transform 0.1s linear;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(4,7,15,0.3) 0%,
+      rgba(4,7,15,0.1) 40%,
+      rgba(4,7,15,0.7) 80%,
+      rgba(4,7,15,1) 100%
+    );
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center; padding: 0 2rem;
+    max-width: 900px;
+  }
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.2em;
+    color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(5rem, 14vw, 11rem);
+    font-weight: 800; letter-spacing: -0.04em;
+    line-height: 0.9;
+    background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0; animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-sub {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 400; color: rgba(232,238,255,0.7);
+    margin-top: 1.2rem; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0; animation: fadeUp 1s 0.7s forwards;
+  }
+  .hero-creator {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem; color: var(--muted);
+    margin-top: 0.6rem; letter-spacing: 0.1em;
+    opacity: 0; animation: fadeUp 1s 0.85s forwards;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; justify-content: center;
+    margin-top: 2.5rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 1s 1s forwards;
+  }
+  .btn-primary {
+    background: var(--cyan); color: var(--bg);
+    padding: 0.85rem 2.5rem; border-radius: 3rem;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.95rem; text-decoration: none;
+    transition: all 0.3s; border: none; cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,200,248,0.4); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text); border: 1px solid rgba(232,238,255,0.3);
+    padding: 0.85rem 2.5rem; border-radius: 3rem;
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 0.95rem; text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--text); background: rgba(255,255,255,0.05); }
+
+  .scroll-indicator {
+    position: absolute; bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%); z-index: 2;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.4rem; opacity: 0; animation: fadeIn 1s 1.8s forwards;
+  }
+  .scroll-indicator span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 8rem 5vw; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800; letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem; font-weight: 700;
+    letter-spacing: -0.02em; margin-bottom: 0.5rem;
+  }
+
+  /* ─── WHAT IS IFIELD ─── */
+  #about {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+    max-width: 1400px; margin: 0 auto;
+  }
+  .about-img-wrap {
+    position: relative;
+    border-radius: 2rem; overflow: hidden;
+  }
+  .about-img-wrap img {
+    width: 100%; display: block;
+    border-radius: 2rem;
+    transition: transform 0.6s ease;
+  }
+  .about-img-wrap:hover img { transform: scale(1.03); }
+  .about-img-wrap::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(135deg, rgba(0,200,248,0.1), transparent);
+    border-radius: 2rem;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+  .about-text p {
+    color: rgba(232,238,255,0.65);
+    margin-top: 1.5rem; font-size: 1.05rem;
+    max-width: 520px;
+  }
+  .stat-row {
+    display: flex; gap: 2.5rem; margin-top: 2.5rem;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem; font-weight: 800;
+    color: var(--cyan); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.82rem; color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.08em; margin-top: 0.2rem;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  #how { background: var(--bg2); max-width: 100%; }
+  #how .inner { max-width: 1400px; margin: 0 auto; }
+  #how .header-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; margin-bottom: 4rem; align-items: end;
+  }
+  #how .header-row p {
+    color: rgba(232,238,255,0.55); font-size: 1rem; margin-top: 1rem;
+  }
+  .arch-image {
+    width: 100%; border-radius: 1.5rem;
+    border: 1px solid var(--border); display: block;
+    margin-bottom: 3rem;
+  }
+  .cards-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+  }
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 1.2rem;
+    padding: 1.8rem 1.5rem;
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .card:hover { border-color: rgba(0,200,248,0.4); transform: translateY(-4px); }
+  .card:hover::before { opacity: 1; }
+  .card-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .card p { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6; }
+
+  /* ─── DEVICE ─── */
+  #device {
+    max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  #device .device-text p { color: rgba(232,238,255,0.6); margin-top: 1.5rem; }
+  .device-features { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .feature-line {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    font-size: 0.92rem;
+  }
+  .feature-line .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cyan); flex-shrink: 0;
+    box-shadow: 0 0 10px var(--cyan);
+  }
+  #device .device-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  #device .device-imgs img {
+    width: 100%; border-radius: 1.2rem;
+    border: 1px solid var(--border);
+  }
+  #device .device-imgs img:first-child {
+    grid-column: 1 / -1;
+  }
+
+  /* ─── BOOK ─── */
+  #book {
+    background: var(--bg2);
+    position: relative; overflow: hidden;
+  }
+  #book::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(0,200,248,0.06), transparent 70%);
+  }
+  #book .inner {
+    max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center; position: relative;
+  }
+  .book-img {
+    width: 100%; border-radius: 1.5rem;
+    border: 1px solid var(--border);
+  }
+  .book-text p { color: rgba(232,238,255,0.6); margin-top: 1.2rem; font-size: 1.05rem; }
+  blockquote {
+    border-left: 2px solid var(--cyan);
+    padding-left: 1.5rem; margin: 2rem 0;
+    color: rgba(232,238,255,0.5);
+    font-style: italic; font-size: 1rem;
+  }
+
+  /* ─── CREATOR ─── */
+  #creator { max-width: 1400px; margin: 0 auto; }
+  #creator .inner {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: 5rem; align-items: center;
+  }
+  .creator-img-wrap {
+    position: relative; border-radius: 1.5rem; overflow: hidden;
+  }
+  .creator-img-wrap img { width: 100%; display: block; }
+  /* iField overlay replacing ProtonMail */
+  .ifield-overlay {
+    position: absolute;
+    bottom: 12%; right: 5%;
+    background: rgba(4,7,15,0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--cyan);
+    border-radius: 1rem;
+    padding: 1.2rem 1.5rem;
+    min-width: 160px;
+    box-shadow: 0 0 40px rgba(0,200,248,0.25);
+  }
+  .ifield-overlay .token-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--cyan);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .ifield-overlay .token-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem; font-weight: 800; color: #fff;
+    letter-spacing: -0.04em;
+  }
+  .ifield-overlay .token-logo span { color: var(--cyan); }
+  .ifield-overlay .token-status {
+    font-size: 0.72rem; color: var(--muted);
+    margin-top: 0.3rem; font-family: 'Space Mono', monospace;
+  }
+  .creator-text p { color: rgba(232,238,255,0.6); margin-top: 1.2rem; font-size: 1rem; }
+  .creator-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 2rem; padding: 0.5rem 1rem;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--muted); margin-top: 1.5rem;
+    letter-spacing: 0.08em;
+  }
+  .creator-badge .flag { font-size: 1rem; }
+
+  /* ─── ECOSYSTEM ─── */
+  #ecosystem { background: var(--bg2); }
+  #ecosystem .inner { max-width: 1400px; margin: 0 auto; }
+  #ecosystem .header { text-align: center; margin-bottom: 4rem; }
+  #ecosystem .header p { color: var(--muted); margin-top: 1rem; }
+  .eco-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .eco-card {
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 1.5rem; padding: 2rem 1.5rem;
+    text-align: center; text-decoration: none;
+    transition: all 0.4s; display: block;
+  }
+  .eco-card:hover {
+    border-color: var(--cyan);
+    background: rgba(0,200,248,0.05);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,200,248,0.1);
+  }
+  .eco-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
+  .eco-card h3 { color: var(--text); font-size: 1rem; margin-bottom: 0; }
+  .eco-card p { color: var(--muted); font-size: 0.82rem; margin-top: 0.4rem; }
+
+  /* ─── FINAL CTA ─── */
+  #cta {
+    position: relative; overflow: hidden;
+    text-align: center; padding: 10rem 5vw;
+  }
+  #cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url('IMG_3688.jpeg');
+    background-size: cover; background-position: center;
+    opacity: 0.12; filter: blur(2px);
+  }
+  #cta::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,200,248,0.08), var(--bg) 70%);
+  }
+  #cta .inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+  #cta h2 { font-size: clamp(2.5rem, 6vw, 4rem); }
+  #cta p { color: var(--muted); margin-top: 1.2rem; font-size: 1.05rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 5vw;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer .logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.1rem; color: var(--text);
+    letter-spacing: -0.03em;
+  }
+  footer .logo span { color: var(--cyan); }
+  footer p { color: var(--muted); font-size: 0.8rem; font-family: 'Space Mono', monospace; }
+
+  /* ─── REVEAL ANIMATIONS ─── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ─── KEYFRAMES ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    #about, #book .inner, #creator .inner, #device {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    #how .header-row { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr 1fr; }
+    .eco-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .stat-row { gap: 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .cards-grid, .eco-grid { grid-template-columns: 1fr; }
+    #device .device-imgs { grid-template-columns: 1fr; }
+    #device .device-imgs img:first-child { grid-column: 1; }
+    .hero-actions { flex-direction: column; align-items: center; }
+    section { padding: 5rem 5vw; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">i<span>Field</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#how">Technology</a></li>
+    <li><a href="#book">Book</a></li>
+    <li><a href="#ecosystem">Ecosystem</a></li>
+  </ul>
+  <a href="https://payhip.com/iField" class="nav-cta" target="_blank">Get the Book</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <p class="hero-tag">Architecture &amp; Consciousness · Ukraine · 2026</p>
+    <h1 class="hero-title">iField</h1>
+    <p class="hero-sub">From seed to digital legend</p>
+    <p class="hero-creator">Creator: K. Roman · Ukraine</p>
+    <div class="hero-actions">
+      <a href="#about" class="btn-primary">Discover iField</a>
+      <a href="https://payhip.com/iField" class="btn-ghost" target="_blank">Read the Book</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- WHAT IS IFIELD -->
+<section style="padding: 8rem 5vw;">
+  <div id="about">
+    <div class="about-img-wrap reveal">
+      <img src="IMG_3688.jpeg" alt="iField Architecture">
+    </div>
+    <div class="about-text">
+      <p class="section-tag reveal">What is iField</p>
+      <h2 class="reveal reveal-delay-1">A new layer<br>of human perception</h2>
+      <p class="reveal reveal-delay-2">iField is a digital system that helps humans understand and regulate their state using data, attention, and technology. It bridges science, art, and conscious living into one coherent field.</p>
+      <p class="reveal reveal-delay-2">Not just a concept — an ecosystem. A book. A technology. A new way to see yourself through data.</p>
+      <div class="stat-row reveal reveal-delay-3">
+        <div class="stat-item">
+          <div class="stat-num">18+</div>
+          <div class="stat-label">Sensors</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Signals</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">1</div>
+          <div class="stat-label">Field</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="inner">
+    <div class="header-row">
+      <div>
+        <p class="section-tag reveal">Technology</p>
+        <h2 class="reveal reveal-delay-1">Architecture<br>of consciousness</h2>
+      </div>
+      <div>
+        <p class="reveal reveal-delay-2">iField captures signals from the body and environment, processes them into meaningful states, and returns clarity — in real time.</p>
+      </div>
+    </div>
+    <img src="IMG_3689.jpeg" alt="iField Architecture & Consciousness" class="arch-image reveal">
+    <div class="cards-grid">
+      <div class="card reveal reveal-delay-1">
+        <div class="card-icon">📡</div>
+        <h3>Capture</h3>
+        <p>Body signals, EEG, heart rate, GSR, environment data — all in one stream.</p>
+      </div>
+      <div class="card reveal reveal-delay-2">
+        <div class="card-icon">🧠</div>
+        <h3>Analyse</h3>
+        <p>AI-driven pattern recognition across biometric and environmental layers.</p>
+      </div>
+      <div class="card reveal reveal-delay-3">
+        <div class="card-icon">🌐</div>
+        <h3>Visualise</h3>
+        <p>Your state rendered as a living digital field — readable, navigable, yours.</p>
+      </div>
+      <div class="card reveal reveal-delay-4">
+        <div class="card-icon">⚡</div>
+        <h3>Regulate</h3>
+        <p>Conscious, data-informed steps toward energy, focus, and balance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE DEVICE -->
+<section style="padding: 8rem 5vw;">
+  <div id="device">
+    <div class="device-text">
+      <p class="section-tag reveal">Hardware</p>
+      <h2 class="reveal reveal-delay-1">Your field.<br>In your pocket.</h2>
+      <p class="reveal reveal-delay-2">iField extends the iPhone into a multi-spectrum sensor platform. Radiation, CO₂, PM2.5, EMF, spectrometry — all readable, all yours.</p>
+      <div class="device-features reveal reveal-delay-3">
+        <div class="feature-line"><div class="dot"></div>iSight — visual spectrum analysis</div>
+        <div class="feature-line"><div class="dot"></div>iSpectrum — molecular sensing</div>
+        <div class="feature-line"><div class="dot"></div>iBioBalance — body field mapping</div>
+        <div class="feature-line"><div class="dot"></div>iField.Joint — autonomous repositioning via Vision Pro</div>
+      </div>
+    </div>
+    <div class="device-imgs reveal reveal-delay-2">
+      <img src="IMG_3992.jpeg" alt="X-Field Device">
+      <img src="IMG_3993.jpeg" alt="iField Sensor Module">
+      <img src="IMG_3990.jpeg" alt="iField Joint">
+    </div>
+  </div>
+</section>
+
+<!-- THE BOOK -->
+<section id="book">
+  <div class="inner">
+    <div class="reveal">
+      <img src="IMG_3988.jpeg" alt="4 2 Okrug — the book" class="book-img">
+    </div>
+    <div class="book-text">
+      <p class="section-tag reveal">The Book</p>
+      <h2 class="reveal reveal-delay-1">4 2 Okrug</h2>
+      <blockquote class="reveal reveal-delay-2">«In one district of a small city, utility bills stopped arriving. People thought — a mistake. Then — a miracle. Then — a conspiracy.»</blockquote>
+      <p class="reveal reveal-delay-2">An artistic narrative where iField's principles unfold through fiction. Technology and human experience become one field of perception. Philosophy disguised as a thriller.</p>
+      <p class="reveal reveal-delay-3">This is not just a book. It is the world that iField was built to inhabit.</p>
+      <div style="margin-top: 2.5rem;" class="reveal reveal-delay-4">
+        <a href="https://payhip.com/iField" class="btn-primary" target="_blank">Read / Buy the Book</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE CREATOR -->
+<section style="padding: 8rem 5vw;">
+  <div id="creator">
+    <div class="inner">
+      <div class="creator-img-wrap reveal">
+        <img src="IMG_3348.jpeg" alt="K. Roman — Digital Ascetic">
+        <!-- iField overlay replacing ProtonMail -->
+        <div class="ifield-overlay">
+          <div class="token-label">iField Token</div>
+          <div class="token-logo">i<span>F</span></div>
+          <div class="token-status">Digital Ascetic · Ukraine</div>
+        </div>
+      </div>
+      <div class="creator-text">
+        <p class="section-tag reveal">Creator</p>
+        <h2 class="reveal reveal-delay-1">K. Roman —<br>Digital Ascetic</h2>
+        <p class="reveal reveal-delay-2">A researcher of digital identity and human consciousness. iField was not invented — it was discovered, through years of observing the intersection of technology, attention, and human energy.</p>
+        <p class="reveal reveal-delay-2">The author does not claim answers. Only a better quality of questions — encoded in data, expressed in story.</p>
+        <div class="creator-badge reveal reveal-delay-3">
+          <span class="flag">🇺🇦</span>
+          K. Roman · Ukraine · 2026
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section id="ecosystem">
+  <div class="inner">
+    <div class="header">
+      <p class="section-tag reveal">Ecosystem</p>
+      <h2 class="reveal reveal-delay-1">Enter the field</h2>
+      <p class="reveal reveal-delay-2">iField exists across multiple spaces. Choose your entry point.</p>
+    </div>
+    <div class="eco-grid">
+      <a href="https://t.me/okrug420" class="eco-card reveal reveal-delay-1" target="_blank">
+        <span class="eco-icon">📡</span>
+        <h3>Telegram</h3>
+        <p>Community & updates</p>
+      </a>
+      <a href="https://github.com/i-field" class="eco-card reveal reveal-delay-2" target="_blank">
+        <span class="eco-icon">⚙️</span>
+        <h3>GitHub</h3>
+        <p>Open architecture</p>
+      </a>
+      <a href="https://payhip.com/iField" class="eco-card reveal reveal-delay-3" target="_blank">
+        <span class="eco-icon">📘</span>
+        <h3>Payhip</h3>
+        <p>Book & digital assets</p>
+      </a>
+      <a href="https://getgems.io/iseeds" class="eco-card reveal reveal-delay-4" target="_blank">
+        <span class="eco-icon">💎</span>
+        <h3>GetGems</h3>
+        <p>iField NFT collection</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta">
+  <div class="inner">
+    <p class="section-tag reveal">Begin here</p>
+    <h2 class="reveal reveal-delay-1">Your field<br>awaits.</h2>
+    <p class="reveal reveal-delay-2">Read the book. Explore the technology. Join the ecosystem. The field is already around you — iField makes it visible.</p>
+    <div class="cta-actions reveal reveal-delay-3">
+      <a href="https://payhip.com/iField" class="btn-primary" target="_blank">Get the Book</a>
+      <a href="https://t.me/okrug420" class="btn-ghost" target="_blank">Join Telegram</a>
+      <a href="https://getgems.io/iseeds" class="btn-ghost" target="_blank">Explore NFT</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">i<span>Field</span> · 4 2 Okrug</div>
+  <p>© 2026 K. Roman · Ukraine · All rights reserved</p>
+  <p style="color: var(--muted); font-size: 0.72rem; font-family: 'Space Mono', monospace;">From seed to digital legend</p>
+</footer>
+
+<script>
+  // Parallax hero
+  const heroBg = document.getElementById('heroBg');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    heroBg.style.transform = `scale(1.08) translateY(${y * 0.3}px)`;
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
