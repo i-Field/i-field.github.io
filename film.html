@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>iField · 42 Округ</title>
 
-<!-- Plausible Analytics — замените домен -->
 <script defer data-domain="i-field.github.io" src="https://plausible.io/js/script.js"></script>
 
 <style>
@@ -25,7 +24,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── SNAP CONTAINER ─── */
 .snap-container {
   height: 100vh;
   overflow-y: scroll;
@@ -33,7 +31,6 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ─── VIDEO SECTION ─── */
 .video-section {
   position: relative;
   width: 100%; height: 100vh;
@@ -55,37 +52,31 @@ body {
 .video-section.is-faded  video.vid-a { opacity: 0; }
 .video-section.is-faded  video.vid-b { opacity: 1; }
 
-/* ─── PLACEHOLDER BACKGROUNDS ─── */
 .vid-placeholder {
   position: absolute; inset: 0; z-index: 0;
 }
-/* Hero */
 .s1 .vid-placeholder {
   background:
     radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.09) 0%, transparent 70%),
     #080808;
 }
-/* Origin */
 .s2 .vid-placeholder {
   background:
     radial-gradient(ellipse 60% 80% at 30% 50%, rgba(30,60,120,0.18) 0%, transparent 65%),
     radial-gradient(ellipse 50% 50% at 70% 30%, rgba(80,20,120,0.1) 0%, transparent 60%),
     #04060e;
 }
-/* iField */
 .s3 .vid-placeholder {
   background:
     radial-gradient(ellipse 70% 70% at 50% 50%, rgba(10,50,20,0.22) 0%, transparent 70%),
     #030a05;
 }
-/* Flow */
 .s4 .vid-placeholder {
   background:
     radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,100,180,0.14) 0%, transparent 55%),
     radial-gradient(ellipse 40% 60% at 70% 30%, rgba(0,200,150,0.07) 0%, transparent 50%),
     #020810;
 }
-/* Future */
 .s5 .vid-placeholder {
   background:
     radial-gradient(ellipse 70% 70% at 50% 40%, rgba(80,0,180,0.12) 0%, transparent 60%),
@@ -93,7 +84,6 @@ body {
     #04030e;
 }
 
-/* grid texture */
 .vid-placeholder::after {
   content: '';
   position: absolute; inset: 0;
@@ -103,7 +93,6 @@ body {
   background-size: 60px 60px;
 }
 
-/* ─── ANIMATED PARTICLES (Flow section) ─── */
 .particle-canvas {
   position: absolute; inset: 0; z-index: 1;
   opacity: 0;
@@ -111,7 +100,6 @@ body {
 }
 .s4.is-active .particle-canvas { opacity: 1; }
 
-/* ─── OVERLAY ─── */
 .video-overlay {
   position: absolute; inset: 0; z-index: 10;
   display: flex; flex-direction: column;
@@ -125,7 +113,6 @@ body {
   );
 }
 
-/* top gold line */
 .video-section::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0;
@@ -134,7 +121,6 @@ body {
   z-index: 20; opacity: 0.55;
 }
 
-/* ─── TYPOGRAPHY ─── */
 .section-eyebrow {
   font-family: 'Courier New', monospace;
   font-size: 11px; letter-spacing: 0.35em;
@@ -160,14 +146,12 @@ body {
   max-width: 520px;
 }
 
-/* text animate-in */
 .video-section.is-active .section-eyebrow,
 .video-section.is-active .section-title,
 .video-section.is-active .section-sub {
   opacity: 1; transform: translateY(0);
 }
 
-/* ─── CTA BUTTON (секции 3 и 5) ─── */
 .section-cta {
   margin-top: 26px;
   background: transparent;
@@ -187,21 +171,18 @@ body {
   color: var(--gold2);
 }
 
-/* ─── CORNERS ─── */
 .corner { position: absolute; z-index: 15; width: 28px; height: 28px; }
 .corner--tl { top: 28px; left: 28px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
 .corner--tr { top: 28px; right: 28px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
 .corner--bl { bottom: 28px; left: 28px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
 .corner--br { bottom: 28px; right: 28px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
 
-/* ─── SECTION INDEX ─── */
 .section-index {
   position: absolute; bottom: 32px; right: 36px; z-index: 15;
   font-family: 'Courier New', monospace; font-size: 11px;
   letter-spacing: 0.2em; color: rgba(201,168,76,0.45);
 }
 
-/* ─── PROGRESS TIMER ─── */
 .vid-timer {
   position: absolute; bottom: 0; left: 0;
   width: 0%; height: 2px;
@@ -209,7 +190,6 @@ body {
   z-index: 16; transition: width linear;
 }
 
-/* ─── SCROLL HINT ─── */
 .scroll-hint {
   position: absolute; bottom: 36px; left: 50%;
   transform: translateX(-50%); z-index: 15;
@@ -231,10 +211,8 @@ body {
   0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
   50%       { opacity: 1;   transform: scaleY(1); }
 }
-/* скрыть scroll hint на последней секции */
 .s5 .scroll-hint { display: none; }
 
-/* ─── LANG SWITCHER ─── */
 .lang-switcher {
   position: fixed; top: 14px; left: 18px; z-index: 9999;
   display: flex; gap: 6px;
@@ -254,7 +232,6 @@ body {
   border-color: var(--gold); color: var(--gold);
 }
 
-/* ─── NAV DOTS ─── */
 .nav-dots {
   position: fixed; right: 20px; top: 50%;
   transform: translateY(-50%); z-index: 9999;
@@ -273,7 +250,6 @@ body {
   box-shadow: 0 0 8px rgba(201,168,76,0.5);
 }
 
-/* ─── CTA BAR ─── */
 .cta-bar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 8888;
   display: flex; align-items: center; justify-content: center; gap: 12px;
@@ -318,7 +294,6 @@ body {
 .cta-bar.submitted .cta-form { display: none; }
 .cta-bar.submitted .cta-success { display: block; }
 
-/* ─── NFT MODAL ─── */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 10000;
   background: rgba(0,0,0,0.88);
@@ -359,14 +334,12 @@ body {
 </head>
 <body>
 
-<!-- ══ LANG SWITCHER ══ -->
 <div class="lang-switcher">
   <button class="lang-btn active" data-lang="uk">UA</button>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
 
-<!-- ══ NAV DOTS ══ -->
 <nav class="nav-dots" id="navDots">
   <button class="nav-dot active" data-idx="0" aria-label="01 Hero"></button>
   <button class="nav-dot" data-idx="1" aria-label="02 Origin"></button>
@@ -375,14 +348,13 @@ body {
   <button class="nav-dot" data-idx="4" aria-label="05 Future"></button>
 </nav>
 
-<!-- ══ SNAP CONTAINER ══ -->
 <div class="snap-container" id="snapWrap">
 
-  <!-- ────────── АКТ 1 · HERO ────────── -->
+  <!-- АКТ 1 · HERO -->
   <section class="video-section s1" data-section="01" data-fade="7000">
     <div class="vid-placeholder"></div>
-    <video class="vid-a" muted loop playsinline preload="none" data-src="01-Hero-a.mp4"></video>
-    <video class="vid-b" muted loop playsinline preload="none" data-src="01-Hero-b.mp4"></video>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="01-Hero-a.mp4.MP4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="01-Hero-b.mp4.MP4"></video>
     <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
     <div class="corner corner--bl"></div><div class="corner corner--br"></div>
     <div class="video-overlay">
@@ -395,11 +367,11 @@ body {
     <div class="section-index">01 / 05</div>
   </section>
 
-  <!-- ────────── АКТ 2 · ORIGIN ────────── -->
+  <!-- АКТ 2 · ORIGIN -->
   <section class="video-section s2" data-section="02" data-fade="7500">
     <div class="vid-placeholder"></div>
-    <video class="vid-a" muted loop playsinline preload="none" data-src="02-Origin-a.mp4"></video>
-    <video class="vid-b" muted loop playsinline preload="none" data-src="02-Origin-b.mp4"></video>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="02-Origin-a.mp4.MP4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="02-Origin-b.mp4.MOV"></video>
     <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
     <div class="corner corner--bl"></div><div class="corner corner--br"></div>
     <div class="video-overlay">
@@ -412,11 +384,11 @@ body {
     <div class="section-index">02 / 05</div>
   </section>
 
-  <!-- ────────── АКТ 3 · iFIELD ────────── -->
+  <!-- АКТ 3 · iFIELD -->
   <section class="video-section s3" data-section="03" data-fade="6500">
     <div class="vid-placeholder"></div>
-    <video class="vid-a" muted loop playsinline preload="none" data-src="03-iField-a.mp4"></video>
-    <video class="vid-b" muted loop playsinline preload="none" data-src="03-iField-b.mp4"></video>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="03-iField-a.mp4.mov"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="03b.mp4.MP4"></video>
     <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
     <div class="corner corner--bl"></div><div class="corner corner--br"></div>
     <div class="video-overlay">
@@ -430,13 +402,12 @@ body {
     <div class="section-index">03 / 05</div>
   </section>
 
-  <!-- ────────── АКТ 4 · FLOW ────────── -->
+  <!-- АКТ 4 · FLOW -->
   <section class="video-section s4" data-section="04" data-fade="8000">
     <div class="vid-placeholder"></div>
-    <!-- canvas particles поверх плейсхолдера -->
     <canvas class="particle-canvas" id="flowCanvas"></canvas>
-    <video class="vid-a" muted loop playsinline preload="none" data-src="04-Flow-a.mp4"></video>
-    <video class="vid-b" muted loop playsinline preload="none" data-src="04-Flow-b.mp4"></video>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="04-Flow-a.mp4.MP4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="04-Flow-b.mp4.MOV"></video>
     <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
     <div class="corner corner--bl"></div><div class="corner corner--br"></div>
     <div class="video-overlay">
@@ -449,11 +420,11 @@ body {
     <div class="section-index">04 / 05</div>
   </section>
 
-  <!-- ────────── АКТ 5 · FUTURE ────────── -->
+  <!-- АКТ 5 · FUTURE -->
   <section class="video-section s5" data-section="05" data-fade="9000">
     <div class="vid-placeholder"></div>
-    <video class="vid-a" muted loop playsinline preload="none" data-src="05-Future-a.mp4"></video>
-    <video class="vid-b" muted loop playsinline preload="none" data-src="05-Future-b.mp4"></video>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="05-Future-a.mp4.MP4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="05-Future-b.mp4.MP4"></video>
     <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
     <div class="corner corner--bl"></div><div class="corner corner--br"></div>
     <div class="video-overlay">
@@ -466,9 +437,9 @@ body {
     <div class="section-index">05 / 05</div>
   </section>
 
-</div><!-- /snap-container -->
+</div>
 
-<!-- ══ EMAIL CTA BAR ══ -->
+<!-- EMAIL CTA BAR -->
 <div class="cta-bar" id="ctaBar">
   <div class="cta-form">
     <input type="email" id="ctaEmail" placeholder="your@email.com" autocomplete="email">
@@ -478,7 +449,7 @@ body {
   <button class="cta-close" id="ctaClose">×</button>
 </div>
 
-<!-- ══ NFT MODAL ══ -->
+<!-- NFT MODAL -->
 <div class="modal-overlay" id="nftModal">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">×</button>
@@ -498,9 +469,6 @@ body {
 </div>
 
 <script>
-/* ══════════════════════════════════════════════════
-   i18n
-══════════════════════════════════════════════════ */
 const i18n = {
   uk: {
     's1.eyebrow':'iField · Роман Безликий · 2026','s1.title':'Округ','s1.sub':'Від зерна до цифрової легенди',
@@ -544,9 +512,6 @@ function applyLang(lang) {
 }
 document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
 
-/* ══════════════════════════════════════════════════
-   VIDEO CONTROLLER
-══════════════════════════════════════════════════ */
 const sections = document.querySelectorAll('.video-section');
 
 function loadVideo(v) { if (v.dataset.src && !v.src) { v.src = v.dataset.src; v.load(); } }
@@ -595,9 +560,7 @@ const observer = new IntersectionObserver(entries => {
     if (e.isIntersecting && e.intersectionRatio >= 0.5) {
       s._active = true;
       activateSection(s);
-      // update nav dots
       document.querySelectorAll('.nav-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
-      // show CTA bar from section 2 onward
       if (idx >= 1) showCta();
     } else {
       deactivateSection(s);
@@ -613,7 +576,6 @@ document.addEventListener('touchstart', () => {
   });
 }, { once: true });
 
-/* ── Nav dots click ── */
 document.querySelectorAll('.nav-dot').forEach(dot => {
   dot.addEventListener('click', () => {
     const idx = parseInt(dot.dataset.idx);
@@ -621,10 +583,6 @@ document.querySelectorAll('.nav-dot').forEach(dot => {
   });
 });
 
-/* ══════════════════════════════════════════════════
-   CANVAS PARTICLES — Flow Section (Акт 4)
-   Рисует светящиеся линии потока (работает без видео)
-══════════════════════════════════════════════════ */
 const canvas = document.getElementById('flowCanvas');
 const ctx = canvas.getContext('2d');
 let particles = [], raf = null, flowActive = false;
@@ -697,7 +655,6 @@ function stopFlow() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Запуск/остановка canvas при активации секции 4
 const s4 = document.querySelector('.s4');
 const s4Observer = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) startFlow();
@@ -707,9 +664,6 @@ s4Observer.observe(s4);
 
 window.addEventListener('resize', () => { if (flowActive) resizeCanvas(); });
 
-/* ══════════════════════════════════════════════════
-   EMAIL CTA
-══════════════════════════════════════════════════ */
 const ctaBar = document.getElementById('ctaBar');
 let ctaShown = false;
 
@@ -731,17 +685,12 @@ document.getElementById('ctaSubmit').addEventListener('click', () => {
     document.getElementById('ctaEmail').focus();
     return;
   }
-  // ← подключите свой endpoint:
-  // fetch('/subscribe', { method:'POST', body: JSON.stringify({email}), headers:{'Content-Type':'application/json'} });
   console.log('[iField] email:', email);
   ctaBar.classList.add('submitted');
   track('email_captured');
   setTimeout(() => ctaBar.classList.remove('visible'), 4000);
 });
 
-/* ══════════════════════════════════════════════════
-   NFT MODAL
-══════════════════════════════════════════════════ */
 const modal = document.getElementById('nftModal');
 const openModal  = () => { modal.classList.add('open'); document.body.style.overflow='hidden'; track('nft_open'); };
 const closeModal = () => { modal.classList.remove('open'); document.body.style.overflow=''; };
@@ -752,17 +701,11 @@ document.getElementById('modalClose').addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-document.getElementById('nftOpenSea')?.addEventListener('click', () => track('nft_opensea'));
-document.getElementById('nftTon')?.addEventListener('click', () => track('nft_ton'));
-
-/* ══════════════════════════════════════════════════
-   ANALYTICS
-══════════════════════════════════════════════════ */
 function track(name, props) {
   if (typeof plausible === 'function') plausible(name, { props: props || {} });
 }
 </script>
+
 <a href="/" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;font-family:Courier New,monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.45);text-decoration:none;border:1px solid rgba(201,168,76,0.2);padding:6px 16px;border-radius:20px;backdrop-filter:blur(8px);background:rgba(0,0,0,0.4)" data-i18n-href="/">← iField</a>
 </body>
 </html>
-
