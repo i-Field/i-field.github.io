@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iField · 42 Округ</title>
+
+<!-- Plausible Analytics — замените домен -->
+<script defer data-domain="i-field.github.io" src="https://plausible.io/js/script.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:  #c9a84c;
+  --gold2: #e8d08a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  overflow-x: hidden;
+}
+
+/* ─── SNAP CONTAINER ─── */
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── VIDEO SECTION ─── */
+.video-section {
+  position: relative;
+  width: 100%; height: 100vh;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.video-section video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  will-change: opacity;
+}
+.video-section video.vid-a { z-index: 1; }
+.video-section video.vid-b { z-index: 2; }
+.video-section.is-active video.vid-a { opacity: 1; }
+.video-section.is-faded  video.vid-a { opacity: 0; }
+.video-section.is-faded  video.vid-b { opacity: 1; }
+
+/* ─── PLACEHOLDER BACKGROUNDS ─── */
+.vid-placeholder {
+  position: absolute; inset: 0; z-index: 0;
+}
+/* Hero */
+.s1 .vid-placeholder {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.09) 0%, transparent 70%),
+    #080808;
+}
+/* Origin */
+.s2 .vid-placeholder {
+  background:
+    radial-gradient(ellipse 60% 80% at 30% 50%, rgba(30,60,120,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 70% 30%, rgba(80,20,120,0.1) 0%, transparent 60%),
+    #04060e;
+}
+/* iField */
+.s3 .vid-placeholder {
+  background:
+    radial-gradient(ellipse 70% 70% at 50% 50%, rgba(10,50,20,0.22) 0%, transparent 70%),
+    #030a05;
+}
+/* Flow */
+.s4 .vid-placeholder {
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,100,180,0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 60% at 70% 30%, rgba(0,200,150,0.07) 0%, transparent 50%),
+    #020810;
+}
+/* Future */
+.s5 .vid-placeholder {
+  background:
+    radial-gradient(ellipse 70% 70% at 50% 40%, rgba(80,0,180,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 20% 70%, rgba(201,168,76,0.06) 0%, transparent 50%),
+    #04030e;
+}
+
+/* grid texture */
+.vid-placeholder::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── ANIMATED PARTICLES (Flow section) ─── */
+.particle-canvas {
+  position: absolute; inset: 0; z-index: 1;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.s4.is-active .particle-canvas { opacity: 1; }
+
+/* ─── OVERLAY ─── */
+.video-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 24px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.15) 0%,
+    rgba(0,0,0,0.42) 50%,
+    rgba(0,0,0,0.75) 100%
+  );
+}
+
+/* top gold line */
+.video-section::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  z-index: 20; opacity: 0.55;
+}
+
+/* ─── TYPOGRAPHY ─── */
+.section-eyebrow {
+  font-family: 'Courier New', monospace;
+  font-size: 11px; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--gold);
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.8s 0.2s, transform 0.8s 0.2s;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-size: clamp(2.4rem, 7vw, 6rem);
+  font-weight: 400; letter-spacing: 0.08em; line-height: 1.1;
+  color: #fff;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.9s 0.4s, transform 0.9s 0.4s;
+  margin-bottom: 16px;
+}
+.section-title span { color: var(--gold2); }
+.section-sub {
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: rgba(255,255,255,0.5); letter-spacing: 0.04em;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.8s 0.65s, transform 0.8s 0.65s;
+  max-width: 520px;
+}
+
+/* text animate-in */
+.video-section.is-active .section-eyebrow,
+.video-section.is-active .section-title,
+.video-section.is-active .section-sub {
+  opacity: 1; transform: translateY(0);
+}
+
+/* ─── CTA BUTTON (секции 3 и 5) ─── */
+.section-cta {
+  margin-top: 26px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Courier New', monospace;
+  font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+  padding: 10px 26px; border-radius: 28px;
+  cursor: pointer;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.8s 0.85s, transform 0.8s 0.85s,
+              background 0.25s, color 0.25s;
+}
+.video-section.is-active .section-cta { opacity: 1; transform: translateY(0); }
+.section-cta:hover {
+  background: rgba(201,168,76,0.14);
+  color: var(--gold2);
+}
+
+/* ─── CORNERS ─── */
+.corner { position: absolute; z-index: 15; width: 28px; height: 28px; }
+.corner--tl { top: 28px; left: 28px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.corner--tr { top: 28px; right: 28px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+.corner--bl { bottom: 28px; left: 28px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.corner--br { bottom: 28px; right: 28px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+
+/* ─── SECTION INDEX ─── */
+.section-index {
+  position: absolute; bottom: 32px; right: 36px; z-index: 15;
+  font-family: 'Courier New', monospace; font-size: 11px;
+  letter-spacing: 0.2em; color: rgba(201,168,76,0.45);
+}
+
+/* ─── PROGRESS TIMER ─── */
+.vid-timer {
+  position: absolute; bottom: 0; left: 0;
+  width: 0%; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  z-index: 16; transition: width linear;
+}
+
+/* ─── SCROLL HINT ─── */
+.scroll-hint {
+  position: absolute; bottom: 36px; left: 50%;
+  transform: translateX(-50%); z-index: 15;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0.4;
+  transition: opacity 0.5s;
+}
+.scroll-hint span {
+  font-family: 'Courier New', monospace;
+  font-size: 10px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--gold);
+}
+.scroll-arrow {
+  width: 1px; height: 36px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  50%       { opacity: 1;   transform: scaleY(1); }
+}
+/* скрыть scroll hint на последней секции */
+.s5 .scroll-hint { display: none; }
+
+/* ─── LANG SWITCHER ─── */
+.lang-switcher {
+  position: fixed; top: 14px; left: 18px; z-index: 9999;
+  display: flex; gap: 6px;
+}
+.lang-btn {
+  background: rgba(201,168,76,0.07);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: rgba(201,168,76,0.5);
+  font-family: 'Courier New', monospace;
+  font-size: 10px; letter-spacing: 0.14em;
+  padding: 5px 10px; border-radius: 16px;
+  cursor: pointer; transition: all 0.25s;
+  backdrop-filter: blur(8px);
+}
+.lang-btn:hover, .lang-btn.active {
+  background: rgba(201,168,76,0.18);
+  border-color: var(--gold); color: var(--gold);
+}
+
+/* ─── NAV DOTS ─── */
+.nav-dots {
+  position: fixed; right: 20px; top: 50%;
+  transform: translateY(-50%); z-index: 9999;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.35);
+  background: transparent;
+  cursor: pointer; transition: all 0.3s;
+  padding: 0;
+}
+.nav-dot.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(201,168,76,0.5);
+}
+
+/* ─── CTA BAR ─── */
+.cta-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 8888;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 14px 20px;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(201,168,76,0.18);
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cta-bar.visible { transform: translateY(0); }
+.cta-bar input[type="email"] {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #fff; font-family: 'Courier New', monospace;
+  font-size: 12px; letter-spacing: 0.04em;
+  padding: 9px 16px; border-radius: 24px; outline: none;
+  width: min(260px, 55vw); transition: border-color 0.25s;
+}
+.cta-bar input::placeholder { color: rgba(255,255,255,0.28); }
+.cta-bar input:focus { border-color: var(--gold); }
+.cta-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #000; font-family: 'Courier New', monospace;
+  font-size: 11px; font-weight: bold; letter-spacing: 0.18em;
+  text-transform: uppercase; padding: 10px 20px; border-radius: 24px;
+  border: none; cursor: pointer; white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.cta-btn:hover { opacity: 0.85; transform: scale(1.03); }
+.cta-close {
+  background: none; border: none; color: rgba(255,255,255,0.22);
+  font-size: 18px; cursor: pointer; padding: 4px; transition: color 0.2s;
+}
+.cta-close:hover { color: rgba(255,255,255,0.6); }
+.cta-success {
+  display: none;
+  font-family: 'Courier New', monospace;
+  font-size: 12px; letter-spacing: 0.14em; color: var(--gold2);
+}
+.cta-form { display: flex; align-items: center; gap: 12px; }
+.cta-bar.submitted .cta-form { display: none; }
+.cta-bar.submitted .cta-success { display: block; }
+
+/* ─── NFT MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(24px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.35s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: #0c0c0c;
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 3px; padding: 48px 40px;
+  max-width: 440px; width: 100%; position: relative;
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+.modal-box::before { content: ''; position: absolute; top: -1px; left: -1px; width: 20px; height: 20px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.modal-box::after  { content: ''; position: absolute; bottom: -1px; right: -1px; width: 20px; height: 20px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+.modal-label { font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.modal-title { font-size: 2rem; font-weight: 400; letter-spacing: 0.06em; color: #fff; margin-bottom: 10px; }
+.modal-title span { color: var(--gold2); }
+.modal-desc { font-size: 0.88rem; color: rgba(255,255,255,0.42); line-height: 1.7; margin-bottom: 30px; }
+.modal-actions { display: flex; flex-direction: column; gap: 10px; }
+.modal-btn {
+  display: block; text-align: center;
+  font-family: 'Courier New', monospace; font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  text-decoration: none; padding: 13px 20px; border-radius: 28px;
+  transition: opacity 0.2s, transform 0.2s; cursor: pointer; border: none;
+}
+.modal-btn:hover { opacity: 0.85; transform: scale(1.02); }
+.modal-btn--primary { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; font-weight: bold; }
+.modal-btn--secondary { background: transparent; border: 1px solid rgba(201,168,76,0.35); color: var(--gold); }
+.modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: rgba(255,255,255,0.2); font-size: 20px; cursor: pointer; transition: color 0.2s; }
+.modal-close:hover { color: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+
+<!-- ══ LANG SWITCHER ══ -->
+<div class="lang-switcher">
+  <button class="lang-btn active" data-lang="uk">UA</button>
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
+<!-- ══ NAV DOTS ══ -->
+<nav class="nav-dots" id="navDots">
+  <button class="nav-dot active" data-idx="0" aria-label="01 Hero"></button>
+  <button class="nav-dot" data-idx="1" aria-label="02 Origin"></button>
+  <button class="nav-dot" data-idx="2" aria-label="03 iField"></button>
+  <button class="nav-dot" data-idx="3" aria-label="04 Flow"></button>
+  <button class="nav-dot" data-idx="4" aria-label="05 Future"></button>
+</nav>
+
+<!-- ══ SNAP CONTAINER ══ -->
+<div class="snap-container" id="snapWrap">
+
+  <!-- ────────── АКТ 1 · HERO ────────── -->
+  <section class="video-section s1" data-section="01" data-fade="7000">
+    <div class="vid-placeholder"></div>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="01-Hero-a.mp4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="01-Hero-b.mp4"></video>
+    <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div><div class="corner corner--br"></div>
+    <div class="video-overlay">
+      <p class="section-eyebrow" data-i18n="s1.eyebrow">iField · Роман Безликий · 2026</p>
+      <h2 class="section-title">4 2 <span data-i18n="s1.title">Округ</span></h2>
+      <p class="section-sub" data-i18n="s1.sub">Від зерна до цифрової легенди</p>
+    </div>
+    <div class="scroll-hint"><span>scroll</span><div class="scroll-arrow"></div></div>
+    <div class="vid-timer"></div>
+    <div class="section-index">01 / 05</div>
+  </section>
+
+  <!-- ────────── АКТ 2 · ORIGIN ────────── -->
+  <section class="video-section s2" data-section="02" data-fade="7500">
+    <div class="vid-placeholder"></div>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="02-Origin-a.mp4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="02-Origin-b.mp4"></video>
+    <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div><div class="corner corner--br"></div>
+    <div class="video-overlay">
+      <p class="section-eyebrow" data-i18n="s2.eyebrow">Глава I</p>
+      <h2 class="section-title"><span data-i18n="s2.title">Origin</span></h2>
+      <p class="section-sub" data-i18n="s2.sub">В одному районі невеликого міста перестали приходити рахунки</p>
+    </div>
+    <div class="scroll-hint"><span>scroll</span><div class="scroll-arrow"></div></div>
+    <div class="vid-timer"></div>
+    <div class="section-index">02 / 05</div>
+  </section>
+
+  <!-- ────────── АКТ 3 · iFIELD ────────── -->
+  <section class="video-section s3" data-section="03" data-fade="6500">
+    <div class="vid-placeholder"></div>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="03-iField-a.mp4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="03-iField-b.mp4"></video>
+    <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div><div class="corner corner--br"></div>
+    <div class="video-overlay">
+      <p class="section-eyebrow" data-i18n="s3.eyebrow">Глава II</p>
+      <h2 class="section-title"><span data-i18n="s3.title">iField</span></h2>
+      <p class="section-sub" data-i18n="s3.sub">Технологічна екосистема · Книга · NFT</p>
+      <button class="section-cta" id="nftBtn" data-i18n="s3.cta">Отримати NFT</button>
+    </div>
+    <div class="scroll-hint"><span>scroll</span><div class="scroll-arrow"></div></div>
+    <div class="vid-timer"></div>
+    <div class="section-index">03 / 05</div>
+  </section>
+
+  <!-- ────────── АКТ 4 · FLOW ────────── -->
+  <section class="video-section s4" data-section="04" data-fade="8000">
+    <div class="vid-placeholder"></div>
+    <!-- canvas particles поверх плейсхолдера -->
+    <canvas class="particle-canvas" id="flowCanvas"></canvas>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="04-Flow-a.mp4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="04-Flow-b.mp4"></video>
+    <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div><div class="corner corner--br"></div>
+    <div class="video-overlay">
+      <p class="section-eyebrow" data-i18n="s4.eyebrow">Глава III</p>
+      <h2 class="section-title"><span data-i18n="s4.title">Flow</span> / Energy</h2>
+      <p class="section-sub" data-i18n="s4.sub">Цифровий потік · Система жива · Біополе в коді</p>
+    </div>
+    <div class="scroll-hint"><span>scroll</span><div class="scroll-arrow"></div></div>
+    <div class="vid-timer"></div>
+    <div class="section-index">04 / 05</div>
+  </section>
+
+  <!-- ────────── АКТ 5 · FUTURE ────────── -->
+  <section class="video-section s5" data-section="05" data-fade="9000">
+    <div class="vid-placeholder"></div>
+    <video class="vid-a" muted loop playsinline preload="none" data-src="05-Future-a.mp4"></video>
+    <video class="vid-b" muted loop playsinline preload="none" data-src="05-Future-b.mp4"></video>
+    <div class="corner corner--tl"></div><div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div><div class="corner corner--br"></div>
+    <div class="video-overlay">
+      <p class="section-eyebrow" data-i18n="s5.eyebrow">Глава IV</p>
+      <h2 class="section-title"><span data-i18n="s5.title">Future</span></h2>
+      <p class="section-sub" data-i18n="s5.sub">Глобальна мережа знань · Екосистема · Куди веде iField</p>
+      <button class="section-cta" id="ecoBtn" data-i18n="s5.cta">Приєднатися</button>
+    </div>
+    <div class="vid-timer"></div>
+    <div class="section-index">05 / 05</div>
+  </section>
+
+</div><!-- /snap-container -->
+
+<!-- ══ EMAIL CTA BAR ══ -->
+<div class="cta-bar" id="ctaBar">
+  <div class="cta-form">
+    <input type="email" id="ctaEmail" placeholder="your@email.com" autocomplete="email">
+    <button class="cta-btn" id="ctaSubmit" data-i18n="cta.btn">Отримати главу</button>
+  </div>
+  <div class="cta-success" data-i18n="cta.success">✓ Дякуємо! Перевірте пошту.</div>
+  <button class="cta-close" id="ctaClose">×</button>
+</div>
+
+<!-- ══ NFT MODAL ══ -->
+<div class="modal-overlay" id="nftModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">×</button>
+    <p class="modal-label">iField NFT · 2026</p>
+    <h2 class="modal-title"><span data-i18n="modal.title">42 Округ</span></h2>
+    <p class="modal-desc" data-i18n="modal.desc">
+      Обмежений тираж. Кожен NFT — унікальний токен доступу до цифрової легенди iField.
+      Власники отримують ранній доступ до книги, закриту спільноту та авторський підпис.
+    </p>
+    <div class="modal-actions">
+      <a href="https://opensea.io" target="_blank" rel="noopener"
+         class="modal-btn modal-btn--primary" id="nftOpenSea" data-i18n="modal.opensea">OpenSea →</a>
+      <a href="https://tonkeeper.com" target="_blank" rel="noopener"
+         class="modal-btn modal-btn--secondary" id="nftTon" data-i18n="modal.ton">TON / Tonkeeper →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   i18n
+══════════════════════════════════════════════════ */
+const i18n = {
+  uk: {
+    's1.eyebrow':'iField · Роман Безликий · 2026','s1.title':'Округ','s1.sub':'Від зерна до цифрової легенди',
+    's2.eyebrow':'Глава I','s2.title':'Origin','s2.sub':'В одному районі невеликого міста перестали приходити рахунки',
+    's3.eyebrow':'Глава II','s3.title':'iField','s3.sub':'Технологічна екосистема · Книга · NFT','s3.cta':'Отримати NFT',
+    's4.eyebrow':'Глава III','s4.title':'Flow','s4.sub':'Цифровий потік · Система жива · Біополе в коді',
+    's5.eyebrow':'Глава IV','s5.title':'Future','s5.sub':'Глобальна мережа знань · Екосистема · Куди веде iField','s5.cta':'Приєднатися',
+    'cta.btn':'Отримати главу','cta.success':'✓ Дякуємо! Перевірте пошту.',
+    'modal.title':'42 Округ','modal.desc':'Обмежений тираж. Кожен NFT — унікальний токен доступу до цифрової легенди iField. Власники отримують ранній доступ до книги, закриту спільноту та авторський підпис.','modal.opensea':'OpenSea →','modal.ton':'TON / Tonkeeper →',
+  },
+  ru: {
+    's1.eyebrow':'iField · Роман Безликий · 2026','s1.title':'Округ','s1.sub':'От зерна до цифровой легенды',
+    's2.eyebrow':'Глава I','s2.title':'Origin','s2.sub':'В одном районе небольшого города перестали приходить счета',
+    's3.eyebrow':'Глава II','s3.title':'iField','s3.sub':'Технологическая экосистема · Книга · NFT','s3.cta':'Получить NFT',
+    's4.eyebrow':'Глава III','s4.title':'Flow','s4.sub':'Цифровой поток · Система живая · Биополе в коде',
+    's5.eyebrow':'Глава IV','s5.title':'Future','s5.sub':'Глобальная сеть знаний · Экосистема · Куда ведёт iField','s5.cta':'Присоединиться',
+    'cta.btn':'Получить главу','cta.success':'✓ Спасибо! Проверьте почту.',
+    'modal.title':'42 Округ','modal.desc':'Ограниченный тираж. Каждый NFT — уникальный токен доступа к цифровой легенде iField. Владельцы получают ранний доступ к книге, закрытое сообщество и авторскую подпись.','modal.opensea':'OpenSea →','modal.ton':'TON / Tonkeeper →',
+  },
+  en: {
+    's1.eyebrow':'iField · Roman Bezlikyi · 2026','s1.title':'District','s1.sub':'From grain to digital legend',
+    's2.eyebrow':'Chapter I','s2.title':'Origin','s2.sub':'In one district of a small town, the bills stopped arriving',
+    's3.eyebrow':'Chapter II','s3.title':'iField','s3.sub':'Tech ecosystem · Book · NFT','s3.cta':'Get NFT',
+    's4.eyebrow':'Chapter III','s4.title':'Flow','s4.sub':'Digital stream · The system is alive · Biofield in code',
+    's5.eyebrow':'Chapter IV','s5.title':'Future','s5.sub':'Global knowledge network · Ecosystem · Where iField leads','s5.cta':'Join',
+    'cta.btn':'Get the chapter','cta.success':'✓ Thank you! Check your inbox.',
+    'modal.title':'42 District','modal.desc':'Limited edition. Each NFT is a unique access token to the iField digital legend. Holders receive early book access, private community & author signature.','modal.opensea':'OpenSea →','modal.ton':'TON / Tonkeeper →',
+  }
+};
+
+let currentLang = 'uk';
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = i18n[lang][el.dataset.i18n];
+    if (v) el.textContent = v;
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  track(`lang_${lang}`);
+}
+document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+
+/* ══════════════════════════════════════════════════
+   VIDEO CONTROLLER
+══════════════════════════════════════════════════ */
+const sections = document.querySelectorAll('.video-section');
+
+function loadVideo(v) { if (v.dataset.src && !v.src) { v.src = v.dataset.src; v.load(); } }
+
+function startTimer(s, ms) {
+  const b = s.querySelector('.vid-timer');
+  if (!b) return;
+  b.style.transition = 'none'; b.style.width = '0%';
+  void b.offsetWidth;
+  b.style.transition = `width ${ms}ms linear`; b.style.width = '100%';
+}
+function resetTimer(s) {
+  const b = s.querySelector('.vid-timer');
+  if (b) { b.style.transition = 'none'; b.style.width = '0%'; }
+}
+
+function activateSection(s) {
+  const vA = s.querySelector('.vid-a'), vB = s.querySelector('.vid-b');
+  const ms = parseInt(s.dataset.fade) || 6500;
+  loadVideo(vA); loadVideo(vB);
+  s.classList.add('is-active'); s.classList.remove('is-faded');
+  vA.play().catch(() => {});
+  startTimer(s, ms);
+  track(`view_${s.dataset.section}`);
+
+  s._fadeTimer = setTimeout(() => {
+    if (!s._active) return;
+    vB.play().catch(() => {});
+    s.classList.add('is-faded');
+    resetTimer(s);
+  }, ms);
+}
+
+function deactivateSection(s) {
+  s._active = false;
+  clearTimeout(s._fadeTimer);
+  s.querySelector('.vid-a').pause();
+  s.querySelector('.vid-b').pause();
+  s.classList.remove('is-active', 'is-faded');
+  resetTimer(s);
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const s = e.target, idx = [...sections].indexOf(s);
+    if (e.isIntersecting && e.intersectionRatio >= 0.5) {
+      s._active = true;
+      activateSection(s);
+      // update nav dots
+      document.querySelectorAll('.nav-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
+      // show CTA bar from section 2 onward
+      if (idx >= 1) showCta();
+    } else {
+      deactivateSection(s);
+    }
+  });
+}, { threshold: 0.5 });
+
+sections.forEach(s => observer.observe(s));
+
+document.addEventListener('touchstart', () => {
+  sections.forEach(s => {
+    if (s._active) s.querySelectorAll('video').forEach(v => v.paused && v.play().catch(() => {}));
+  });
+}, { once: true });
+
+/* ── Nav dots click ── */
+document.querySelectorAll('.nav-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const idx = parseInt(dot.dataset.idx);
+    sections[idx].scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+/* ══════════════════════════════════════════════════
+   CANVAS PARTICLES — Flow Section (Акт 4)
+   Рисует светящиеся линии потока (работает без видео)
+══════════════════════════════════════════════════ */
+const canvas = document.getElementById('flowCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [], raf = null, flowActive = false;
+
+function resizeCanvas() {
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.vy = (Math.random() - 0.5) * 0.6;
+    this.life = Math.random();
+    this.maxLife = 0.6 + Math.random() * 0.4;
+    this.r = 1 + Math.random() * 1.5;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.life += 0.003;
+    if (this.life > this.maxLife || this.x < 0 || this.x > canvas.width) this.reset();
+  }
+  draw() {
+    const alpha = Math.sin((this.life / this.maxLife) * Math.PI) * 0.5;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0,180,140,${alpha})`;
+    ctx.fill();
+  }
+}
+
+function connectParticles() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(0,160,120,${0.12 * (1 - d/100)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animateFlow() {
+  if (!flowActive) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  connectParticles();
+  raf = requestAnimationFrame(animateFlow);
+}
+
+function startFlow() {
+  resizeCanvas();
+  particles = Array.from({ length: 80 }, () => new Particle());
+  flowActive = true;
+  animateFlow();
+}
+function stopFlow() {
+  flowActive = false;
+  cancelAnimationFrame(raf);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Запуск/остановка canvas при активации секции 4
+const s4 = document.querySelector('.s4');
+const s4Observer = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) startFlow();
+  else stopFlow();
+}, { threshold: 0.4 });
+s4Observer.observe(s4);
+
+window.addEventListener('resize', () => { if (flowActive) resizeCanvas(); });
+
+/* ══════════════════════════════════════════════════
+   EMAIL CTA
+══════════════════════════════════════════════════ */
+const ctaBar = document.getElementById('ctaBar');
+let ctaShown = false;
+
+function showCta() {
+  if (ctaShown || ctaBar.dataset.closed) return;
+  ctaShown = true;
+  ctaBar.classList.add('visible');
+  track('cta_shown');
+}
+
+document.getElementById('ctaClose').addEventListener('click', () => {
+  ctaBar.classList.remove('visible');
+  ctaBar.dataset.closed = '1';
+});
+
+document.getElementById('ctaSubmit').addEventListener('click', () => {
+  const email = document.getElementById('ctaEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('ctaEmail').focus();
+    return;
+  }
+  // ← подключите свой endpoint:
+  // fetch('/subscribe', { method:'POST', body: JSON.stringify({email}), headers:{'Content-Type':'application/json'} });
+  console.log('[iField] email:', email);
+  ctaBar.classList.add('submitted');
+  track('email_captured');
+  setTimeout(() => ctaBar.classList.remove('visible'), 4000);
+});
+
+/* ══════════════════════════════════════════════════
+   NFT MODAL
+══════════════════════════════════════════════════ */
+const modal = document.getElementById('nftModal');
+const openModal  = () => { modal.classList.add('open'); document.body.style.overflow='hidden'; track('nft_open'); };
+const closeModal = () => { modal.classList.remove('open'); document.body.style.overflow=''; };
+
+document.getElementById('nftBtn')?.addEventListener('click', openModal);
+document.getElementById('ecoBtn')?.addEventListener('click', openModal);
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('nftOpenSea')?.addEventListener('click', () => track('nft_opensea'));
+document.getElementById('nftTon')?.addEventListener('click', () => track('nft_ton'));
+
+/* ══════════════════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════════════════ */
+function track(name, props) {
+  if (typeof plausible === 'function') plausible(name, { props: props || {} });
+}
+</script>
+<a href="/" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;font-family:Courier New,monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.45);text-decoration:none;border:1px solid rgba(201,168,76,0.2);padding:6px 16px;border-radius:20px;backdrop-filter:blur(8px);background:rgba(0,0,0,0.4)" data-i18n-href="/">← iField</a>
+</body>
+</html>
