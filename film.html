@@ -36,16 +36,24 @@ body {
   width: 100%; height: 100vh;
   overflow: hidden;
   scroll-snap-align: start;
+  background: #000;
 }
 
+/* ── КЛЮЧОВИЙ ФІХ: contain замість cover ──────────────────────────── */
 .video-section video {
-  position: absolute; inset: 0;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  /* contain — весь рисунок видно, чорні поля по боках якщо треба */
   width: 100%; height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   opacity: 0;
   transition: opacity 1.2s ease;
   will-change: opacity;
+  background: #000;
 }
+/* ─────────────────────────────────────────────────────────────────── */
+
 .video-section video.vid-a { z-index: 1; }
 .video-section video.vid-b { z-index: 2; }
 .video-section.is-active video.vid-a { opacity: 1; }
@@ -131,8 +139,6 @@ body {
 }
 .section-title {
   font-size: clamp(2.4rem, 7vw, 6rem);
-
-
   font-weight: 400; letter-spacing: 0.08em; line-height: 1.1;
   color: #fff;
   opacity: 0; transform: translateY(20px);
