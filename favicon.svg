@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0a0e2a"/>
+      <stop offset="100%" stop-color="#000510"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0044aa" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="igrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="50%" stop-color="#0088ff"/>
+      <stop offset="100%" stop-color="#5500ff"/>
+    </linearGradient>
+    <filter id="gf" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="50" fill="url(#bg)"/>
+
+  <!-- Glow background -->
+  <circle cx="50" cy="50" r="50" fill="url(#glow)"/>
+
+  <!-- Outer ring -->
+  <circle cx="50" cy="50" r="46" fill="none" stroke="#1a4a8a" stroke-width="1.5"/>
+  <!-- Middle ring -->
+  <circle cx="50" cy="50" r="43" fill="none" stroke="#0066cc" stroke-width="0.8" opacity="0.6"/>
+  <!-- Inner ring glow -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#00aaff" stroke-width="1.2" opacity="0.4" filter="url(#glow2)"/>
+
+  <!-- Shine highlight on ring -->
+  <path d="M 25 20 A 35 35 0 0 1 75 20" fill="none" stroke="white" stroke-width="2" opacity="0.25" stroke-linecap="round"/>
+
+  <!-- Letter i — dot -->
+  <circle cx="50" cy="28" r="6" fill="url(#igrad)" filter="url(#gf)"/>
+  <circle cx="50" cy="28" r="4" fill="#00eeff" opacity="0.8"/>
+
+  <!-- Letter i — body -->
+  <rect x="43" y="38" width="14" height="35" rx="3" fill="url(#igrad)" filter="url(#gf)"/>
+
+  <!-- Inner shine on letter -->
+  <rect x="44" y="39" width="5" height="33" rx="2" fill="white" opacity="0.15"/>
+
+  <!-- Bottom glow -->
+  <ellipse cx="50" cy="85" rx="15" ry="4" fill="#0066ff" opacity="0.3" filter="url(#glow2)"/>
+</svg>
